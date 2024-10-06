@@ -14,6 +14,7 @@ function Core.Main()
     local HPart = Char:WaitForChild("HumanoidRootPart")
    
     function Core.Execute1()
+        Blind = false
         local FakeH = HPart:Clone()
         FakeH.Parent = Char
 
@@ -21,6 +22,7 @@ function Core.Main()
         HPart.Name = Core.Rename
     end
     function Core.Execute2()
+       Blind = true
         local FakeH = Char:WaitForChild("HumanoidRootPart")
         if FakeH then
             FakeH:Destroy()
