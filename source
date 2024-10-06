@@ -29,7 +29,7 @@ function Core.Main()
     end
 
     Core.UserInputService.InputBegan:Connect(function(i)
-        if i.KeyCode = Core.TurnKey then
+        if i.KeyCode == Core.TurnKey then
             if not Core.Blind then
                 Core.Execute1()
             else
