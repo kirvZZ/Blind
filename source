@@ -1,0 +1,46 @@
+local Core = {};
+function Core.RunConfig()
+    Core.TurnKey = Enum.KeyCode.F
+    Core.Rename = "non_root"
+    Core.DefaultN = "HumanoidRootPart"
+    Core.Blind = false
+end
+function Core.RunServices()
+    Core.UserInputService = game:GetService("UserInputService")
+    Core.Players = game:GetService("Players")
+end
+function Core.Main()
+    local Char = Core.Players.LocalPlayer.Character or Core.Players.LocalPlayer.CharacterAdded:Wait()
+    local HPart = Char:WaitForChild("HumanoidRootPart")
+   
+    function Core.Execute1()
+        local FakeH = HPart:Clone()
+        FakeH.Parent = Char
+
+        FakeH.Name = HPart.Name
+        HPart.Name = Core.Rename
+    end
+    function Core.Execute2()
+        local FakeH = Char:WaitForChild("HumanoidRootPart")
+        if FakeH then
+            FakeH:Destroy()
+        end
+        HPart.Name = Core.DefaultN
+    end
+
+    Core.UserInputService.InputBegan:Connect(function(i)
+        if i.KeyCode = Core.TurnKey then
+            if not Core.Blind then
+                Core.Execute1()
+            else
+                Core.Execute2()
+            end
+        end
+    end)
+end
+spawn(function()
+    Core.RunConfig()
+    Core.RunServices()
+    task.wait(.15)
+    Core.Main()
+end)
