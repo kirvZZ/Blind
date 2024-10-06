@@ -1,6 +1,6 @@
 local Core = {};
 function Core.RunConfig()
-    Core.TurnKey = Enum.KeyCode.F
+    Core.TurnKey = Enum.KeyCode.RightShift
     Core.Rename = "non_root"
     Core.DefaultN = "HumanoidRootPart"
     Core.Blind = false
@@ -44,3 +44,5 @@ spawn(function()
     task.wait(.15)
     Core.Main()
 end)
+
+
