@@ -1,50 +1,97 @@
-local Core = {};
-function Core.RunConfig()
-    Core.TurnKey = Enum.KeyCode.Home
-    Core.Rename = "non_root"
-    Core.DefaultN = "HumanoidRootPart"
-    Core.Blind = false
+function Blind(v)
+	if v == true then
+		
+		
+		local BlindPart_Name = "HumanoidRootPart"
+		local HumanoidPart_Name = "ClosedByBlind"
+		
+		
+		local nc = game.Players.LocalPlayer
+		
+		if nc.Character then
+			Blinded = true
+			local HumanoidPart = nc.Character:WaitForChild("HumanoidRootPart")
+			local BlindPart = HumanoidPart:Clone()
+			
+			HumanoidPart:AddTag("Real")
+			HumanoidPart.Name = HumanoidPart_Name
+			
+			
+			BlindPart:AddTag("Fake")
+			BlindPart.Parent = nc.Character
+			BlindPart.Name = BlindPart_Name
+			
+			
+			local InstancesFolder
+			if not game.Workspace.Terrain:FindFirstChild("InstancesFolder") then
+				InstancesFolder = Instance.new("Model")
+				InstancesFolder.Parent = game.Workspace.Terrain
+				InstancesFolder.Name = "InstancesFolder"
+			else
+				InstancesFolder = game.Workspace.Terrain["InstancesFolder"]
+			end
+			
+			local InstanceView = HumanoidPart:Clone()
+			
+			for _,i in InstanceView:GetChildren() do
+				i:Destroy()
+			end
+			
+			InstanceView.Parent = InstancesFolder
+			InstanceView.Name = "Torso"
+			
+			InstanceView.Material = Enum.Material.ForceField
+			InstanceView.Color = Color3.fromRGB(9, 137, 207)
+			
+			InstanceView.CastShadow = false
+			InstanceView.Anchored = true
+			
+			InstanceView.CanTouch = false
+			InstanceView.CanCollide = false
+			InstanceView.Transparency = 0
+			
+			local InstanceHL = Instance.new("Highlight")
+			InstanceHL.Parent = InstanceView
+			InstanceHL.DepthMode = Enum.HighlightDepthMode.Occluded
+			InstanceHL.FillTransparency = 1
+			InstanceHL.OutlineTransparency = 0
+			InstanceHL.OutlineColor = Color3.fromRGB(255,255,255)
+			
+			InstanceHL.Enabled = true
+			
+			local InstanceHum = Instance.new("Humanoid")
+			InstanceHum.Parent = InstancesFolder
+			
+			local InstanceCloth = Instance.new("Shirt")
+			InstanceCloth.ShirtTemplate = "http://www.roblox.com/asset/?id=144076357"
+			
+			InstanceCloth.Parent = InstancesFolder
+			
+			
+		else
+			Blinded = false
+		end
+	else
+
+
+		local nc = game.Players.LocalPlayer
+
+		if nc.Character then
+			Blinded = false
+			for _,i in nc.Character:GetChildren() do
+				if i:HasTag("Real") then
+					i.Name = "HumanoidRootPart"
+					i:RemoveTag("Real")
+				elseif i:HasTag("Fake") then
+					i:Destroy()
+				end
+			end
+			
+			if game.Workspace.Terrain:FindFirstChild("InstancesFolder") then
+				for _,i in game.Workspace.Terrain["InstancesFolder"]:GetChildren() do
+					i:Destroy()
+				end
+			end
+		end
+	end
 end
-function Core.RunServices()
-    Core.UserInputService = game:GetService("UserInputService")
-    Core.Players = game:GetService("Players")
-end
-function Core.Main()
-    local Char = Core.Players.LocalPlayer.Character or Core.Players.LocalPlayer.CharacterAdded:Wait()
-    local HPart = Char:WaitForChild("HumanoidRootPart")
-   
-    function Core.Execute1()
-        Core.Blind = true
-        local FakeH = HPart:Clone()
-        FakeH.Parent = Char
-
-        FakeH.Name = HPart.Name
-        HPart.Name = Core.Rename
-    end
-    function Core.Execute2()
-        Core.Blind = false
-        local FakeH = Char:WaitForChild("HumanoidRootPart")
-        if FakeH then
-            FakeH:Destroy()
-        end
-        HPart.Name = Core.DefaultN
-    end
-
-    Core.UserInputService.InputBegan:Connect(function(i)
-        if i.KeyCode == Core.TurnKey then
-            if not Core.Blind then
-                Core.Execute1()
-            else
-                Core.Execute2()
-            end
-        end
-    end)
-end
-spawn(function()
-    Core.RunConfig()
-    Core.RunServices()
-    task.wait(.15)
-    Core.Main()
-end)
-
-
